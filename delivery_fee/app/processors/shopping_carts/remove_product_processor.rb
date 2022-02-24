@@ -1,7 +1,5 @@
-# frozen_string_literal: true
-
 module ShoppingCarts
-  class AddOrCreateProcessor
+  class RemoveProductProcessor
     def self.call(user_id:, products:)
       new(user_id: user_id, products: products).exec
     end
@@ -12,26 +10,18 @@ module ShoppingCarts
     end
 
     def exec
-      create_repository.call(user: user) if shopping_cart.nil?
       @products.each do |product|
-        add_product_repository.call(
+        ShoppingCarts::RemoveProductRepository.call(
           shopping_cart: shopping_cart,
           product_id: product[:id],
           amount: product[:amount]
         )
       end
+      ShoppingCarts::Destroy.call(shopping_cart: shopping_cart) if shopping_cart_products.empty?
     end
 
-    def add_product_repository
-      ShoppingCarts::AddProductRepository
-    end
-
-    def create_repository
-      ShoppingCarts::CreateRepository
-    end
-
-    def user
-      @user ||= Users::FindRepository.call(@user_id)
+    def shopping_cart_products
+      @shopping_cart_products ||= ShoppingCarts::FindProducts.call(shopping_cart: shopping_cart)
     end
 
     def shopping_cart

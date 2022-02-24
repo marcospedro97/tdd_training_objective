@@ -5,6 +5,5 @@ FactoryBot.define do
     name { 'MyString' }
     zip_code { 'MyString' }
     email { 'email@host.com' }
-    password { 'password' }
   end
 end

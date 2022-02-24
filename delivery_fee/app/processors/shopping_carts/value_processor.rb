@@ -11,8 +11,11 @@ module ShoppingCarts
     end
 
     def exec
-      repository.call(user_id: @user_id).
-                shopping_cart_products.map do |p|
+      shopping_cart = repository.call(user_id: @user_id)
+      return 0.0 if shopping_cart.nil?
+      return 0.0 if shopping_cart.products.empty?
+      
+      value = shopping_cart.shopping_cart_products.map do |p|
         p.product.value * p.amount
       end.sum
     end

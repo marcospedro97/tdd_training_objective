@@ -19,4 +19,13 @@ RSpec.describe ShoppingCarts::ValueProcessor do
     # ASSERT
     expect(result).to eq(20.0)
   end
+
+  it 'should return 0 if the shopping cart does not exist' do
+    # ARRANGE
+    user = create(:user)
+    # ACT
+    result = ShoppingCarts::ValueProcessor.call(user_id: user.id)
+    # ASSERT
+    expect(result).to eq(0.0)
+  end
 end
